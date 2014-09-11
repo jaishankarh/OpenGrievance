@@ -1,0 +1,237 @@
+# Create your views here.
+
+from django.contrib.auth.models import User
+from django.contrib import auth
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import MultipleObjectsReturned
+from django.http import HttpResponseRedirect
+from griev import formmodels
+from griev import models
+from django.shortcuts import redirect
+from django.template.loader import render_to_string
+from django.template.loader import get_template
+from django.template import Context
+
+#*********************************************************************************************************************
+
+def login(request):
+#                if form.is_valid():
+            if request.method == 'POST':
+                    form = formmodels.LoginForm(request.POST)
+                    if form.is_valid():
+                        username = request.POST['username'];
+                        password = request.POST['password'];
+                        email = request.POST['email'];
+                        user = auth.authenticate(username=username, password=password);
+                        request.session.set_expiry(300);
+                        if user is not None and user.is_active:
+                            # Correct password, and the user is marked "active"
+                            auth.login(request, user);
+                            # Redirect to a success page.
+                            #next_url = request.GET['next']## rewrite this so that the view will forward the reqeust to the correct view..
+                            return HttpResponseRedirect('/login_success');
+                                #request.session.set_expiry(0);
+                        else:
+                            return HttpResponseRedirect('/login_failure');
+                            
+                              # Show an error page
+                                #return HttpResponseRedirect('/login_failure/');
+            else :
+                form = formmodels.LoginForm()
+            return render(request, 'login_home.html',{'form':form, 'title':"User Login",'action_url':'/login/'});
+                    #return HttpResponse("Not post!!");
+
+#*********************************************************************************************************************
+                    
+#def register(request):
+#	
+#	if(request.method == 'POST'):
+#			if(request.session['usertype']=='C'):User Login
+#				form = formmodels.UserReg(request.POST);
+#			elif(request.session['usertype']=='Off'):
+#				form = formmodels.OfficerReg(request.POST); ###have to change this UserReg constructor once the formmodel is made
+#			elif(request.session['usertype']=='Org'):
+#				form = formmodels.OrgReg(request.POST);###have to change this UserReg constructor once the formmodel is made
+#			else: 
+#				form = formmodels.UserReg(request.POST);
+#			if form.is_valid():
+#				#return success...
+#				return HttpResponseRedirect('/login_success');
+#			else:
+#				second_part = render_to_string('second_part_reg.txt', {'form':form, 'title':"Register to Begin",'action_url':'/register/'});
+#				first_part = render_to_string('first_part_reg.txt');username
+#				render(request, 'register_generic.html',{'first_part_of_form':first_part, 'rest_of_form':second_part, 'action_url':'/register/'}); 
+#			
+#	else:			
+#		rendered = render_to_string('first_part_reg.txt');
+#		return render(request, 'register_generic.html',{'first_part_of_form':rendered, 'title':"Register to Begin",'action_url':'/register/'}); 
+#
+##*********************************************************************************************************************
+
+def cal(request):
+    form = formmodels.LoginForm()
+    return render(request,'generic_home.html',{'form':form,'title':"Hello Please Login"})
+
+##******************************************************************************************************************************88
+def register(request):
+	if(request.method == 'POST'):#1
+		if 'which_page' in request.POST and request.POST['which_page'] == 'usertype_page':
+
+				form = formmodels.UserSelect(request.POST);
+				if form.is_valid():
+					request.session['usertype'] = request.POST['usertype'];
+					if(request.session['usertype']=='C'):
+						form = formmodels.UserRegForm();
+					elif(request.session['usertype']=='Off'):
+						form = formmodels.OfficerRegForm(); ###have to change this UserReg constructor once the formmodel is made
+					elif(request.session['usertype']=='Org'):
+						form = formmodels.OrgRegForm();###have to change this UserReg constructor once the formmodel is made
+					else: 
+						form = formmodels.UserReg();
+					
+					text = "<input type=\"hidden\" name=\"which_page\" value=\"reg_page\"/>";
+					return render(request, 'generic_reg.html',{'form':form, 'title':"Tell Us Who You Are?",'action_url':'/register/','which_page':text});
+				
+				else:
+					form = formmodels.UserSelect(request.POST);
+					
+					text = "<input type=\"hidden\" name=\"which_page\" value=\"usertype_page\"/>";
+					return render(request, 'generic_reg.html',{'form':form, 'title':"Tell Us Who You Are?",'action_url':'/register/','which_page':text});
+
+		if 'which_page' in request.POST and request.POST['which_page'] == 'reg_page':#2
+			if(request.session['usertype']=='C'):
+					form = formmodels.UserRegForm(request.POST, request.FILES);
+			elif(request.session['usertype']=='Off'):
+				form = formmodels.OfficerRegForm(request.POST); 
+			else:
+					form = formmodels.OrgRegForm(request.POST);
+			if(form.is_valid()):
+				#if(request.session['usertype']=='C'):
+#					create_user(request,form);
+#				elif(request.session['usertype']=='Off'):
+#					create_officer(request,form);
+#				else:
+#					create_org(request, form);
+				
+				create_user(request,form);
+				return render(request, 'home.html',{'username':"Welcome %s" %(request.user.username)});
+			else:
+				text = "<input type=\"hidden\" name=\"which_page\" value=\"reg_page\"/>";
+				#if(form.email.errors):
+#					form.email.errors = form.email.errors + 'div class="fieldWrapper" id="div_id_submit"><a  name="subscribe" id="mc-embedded-subscribe" class="button round" href="/forgot_passowrd">Register&nbsp&nbsp&nbsp&raquo;"</a></div>';
+				return render(request, 'generic_reg.html',{'form':form, 'title':"Tell Us Who You Are?",'action_url':'/register/','which_page':text});
+		
+	else:#2
+		form = formmodels.UserSelect();
+		
+		text = "<input type=\"hidden\" name=\"which_page\" value=\"usertype_page\"/>";
+		return render(request, 'generic_reg.html',{'form':form, 'title':"Tell Us Who You Are?",'action_url':'/register/','which_page':text});
+		
+
+def create_user(request,form):
+				username = form.cleaned_data['username'];
+				password = form.cleaned_data['password'];
+				email = form.cleaned_data['email'];
+				user = User.objects.create_user(username=username,password=password,email=email);
+				user = auth.authenticate(username=username, password=password);
+				auth.login(request,user);
+				usertype = models.UserType(userid=user,usertype='C')
+				newform = formmodels.UserRegForm(form.cleaned_data);
+				newform = form.save(commit=False);
+				newform.userid = user;			
+				usertype.save();
+				newform.save();
+	
+
+def login_success(request):
+    if not request.user.is_authenticated():
+		return redirect('/login_failure');
+    else:
+      user = request.user;
+      return render(request, 'user_home.html',{'title':"Welcome %s" %(user.username)});
+
+#*********************************************************************************************************************
+
+def login_failure(request):
+            return render(request, 'home.html',{'username':"Invalid User!! Please Login Again"})
+            
+def post_grievance(request): ###this method does not save the many to many field of organisation...
+	if not request.user.is_authenticated():
+		return redirect('/login/?next=%s' % request.path);
+	if(request.method=='POST'):
+		form = formmodels.GrievanceReg(request.POST);
+		if form.is_valid():
+			org = models.Organisation.objects.filter(name="Yahoo"); ##need to change this line.....
+			newform = formmodels.GrievanceReg(form.cleaned_data);
+			newform = form.save(commit=False);
+			newform.officerid = request.user;
+			newform.orgid = org;
+			newform.client_no = request.user;						
+			newform.save();
+			newform.save_m2m();
+			return render(request,'home.html',{'username':'Successfully posted the grievance. We will get back to you shortly!',});
+		else:
+			return render(request,'user_home.html',{'form':form, 'title':'Post your grievance','action_url':'post_grievance/'});
+	else:
+		form = formmodels.GrievanceReg();
+		return render(request,'user_home.html',{'form':form, 'title':'Post your grievance','action_url':'post_grievance/'});
+		
+def my_grievances(request):
+	if not request.user.is_authenticated():
+		return redirect('/login/?next=%s' % request.path);
+	else:
+		my_grievs = models.GrievanceRegistration.objects.filter(client_no_id=request.user.id);
+        orgs = "";
+        for item in my_grievs:
+            temp = item.orgid.all();
+            
+            for value in temp:
+                orgs = orgs + value.name + ", ";
+         
+        t = get_template("my_grievances_table.html");
+        table_content = t.render(Context({"table_content":my_grievs,"orgs":orgs}));
+        return render(request,'user_home.html',{'content':table_content});	
+    
+#**********************	**************************************************************************************************
+def edit_grievances(request, id):
+
+   
+    if not request.user.is_authenticated():
+        return redirect('/login/?next=%s' % request.path);
+    elif request.method == 'POST':
+                    form = formmodels.GrievanceReg(request.POST)
+                    if form.is_valid():
+                        #org = models.Organisation.objects.get(name='Yahoo'); ##need to change this line.....
+                        #newform = formmodels.GrievanceReg(form.cleaned_data);
+                        #newform = form.save(commit=False);
+                        #newform.officerid = request.user;
+                        #newform.orgid = org;
+                        #newform.client_no = request.user;                        
+                        #newform.save();
+                        #newform.save_m2m();
+                        clean_form = form.cleaned_data;
+                        old = models.GrievanceRegistration.objects.get(id=request.session['id']);
+                        old.date = clean_form['date'];
+                        old.time = clean_form['time'];
+                        old.sector = clean_form['sector'];
+                        old.description = clean_form['description'];
+                        old.state = clean_form['state'];
+                        old.city = clean_form['city'];
+                        old.location = clean_form['location'];
+                        old.pincode = clean_form['pincode'];
+                        old.save();
+                        return render(request,'user_home.html',{'content':'Successfully edited your grievance!',});
+                    else:
+                        return render(request,'user_home.html',{'form':form, 'title':'Edit your grievance','action_url':request.path});
+                        
+    else :
+         griev_id = id;
+         my_griev = models.GrievanceRegistration.objects.get(id=griev_id);
+         form = formmodels.GrievanceReg(instance=my_griev);
+         request.session['id']=id;
+         return render(request, 'user_home.html',{'form':form, 'title':"Edit your grievance",'action_url':request.path});
+                    #return HttpResponse("Not post!!");

@@ -1,0 +1,70 @@
+<style>
+    .customcell
+    {
+        background-color: aliceblue;
+        
+    }
+</style>
+<table>
+	<tr>
+		<td>ID</td>
+		<td>Name</td>
+		<td>Date</td>
+		<td>Officer</td>
+		<td>Organisations</td>
+		
+        </tr>
+	{% for value in table_content %}
+	<a href="{{ action_url }}/{{ value.id }}">
+	<tr>
+		
+		<td>
+                    
+			<a href="{{ action_url }}/{{ value.id }}">
+			{{ value.id }}
+			</a>
+                    
+		</td>
+		
+		
+		<td>
+                    
+			<a href="{{ action_url }}/{{ value.id }}">
+			{{ value.name }}
+			</a>
+                    
+		</td>
+		
+		
+		<td>
+                    
+			<a href="{{ action_url }}/{{ value.id }}">
+			{{ value.date }}
+			</a>
+                    
+		</td>
+		
+		
+		<td>
+                    
+			<a href="{{ action_url }}/{{ value.id }}">
+			{{ value.officerid }}
+			</a>
+                    
+		</td>
+		
+		
+		<td>
+                    
+                        <a href="{{ action_url }}/{{ value.id }}">
+                        {{ value.orgs }}
+                        </a>
+                    
+		</td>
+            </tr>
+			
+	{% endfor %}
+	
+</table>
+
+<p>**Click on an item to edit it</p>

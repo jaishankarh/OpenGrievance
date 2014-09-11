@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+{% load extras %}
+
+<html>
+<head>
+<title>Open Grievance Login</title>
+	{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static "css/home.css" %}">    
+
+<style>
+
+
+</style>
+
+</head>
+<script type="text/javascript" >
+function passwd_conform()
+{
+	pass1 = document.getElementById("id_password").value;
+	pass2 = document.getElementById("id_password_conform").value;
+	//alert(pass1);
+	if(pass1==pass2)
+		return true;
+	else {
+			document.getElementById("password_error").innerHTML="Passwords don't match!! Please match them!!";
+			return false;
+	}
+}
+</script>
+
+<body>
+
+<div class="center_box">
+<div class="container" id="main">
+<div id="title"><h2>{{ title }} </h2> </div>
+
+	<div id="errorlist">
+					{% if form.errors %}
+        	<p style="color: red;">
+         	   Please correct the error{{ form.errors|pluralize }} below.
+        	</p>
+        	<p style="color: red;">
+         	   Please correct the error{{ form.errors|pluralize }} below.
+        	</p>
+    			{% endif %}
+  </div>
+  <div class="container" id="fields">
+  {% if form.is_multipart %}
+    <form enctype="multipart/form-data" method="post" action={{ action_url }}>
+	{% else %}
+    <form method="post" action={{ action_url }}>
+	{% endif %}
+	{% csrf_token %}
+    {% for field in form %}
+    			
+    			{% if field.field.widget|field_type == 'RadioSelect' %}
+    				<div class="fieldWrapper" id={{ field.id_for_label|make_div_id }}>
+    				{{ field.errors }}
+    				<fieldset>
+    					<legend>{{ field.name|capfirst }}</legend>
+						{% for radio in field %}
+						<div class="radiofields" id={{ field.id_for_label|make_radio_id:forloop.counter }}>
+								
+   					 {{ radio }}
+							</div>
+							{% endfor %}
+							</fieldset>
+							</div>
+						{% else %}					
+        <div class="fieldWrapper" id={{ field.id_for_label|make_div_id }}>
+            {{ field.errors }}
+            {{ field.label }}{{ field }}
+        </div>
+        {% endif %}
+    {% endfor %}
+    <div class="fieldWrapper" id="submit_button">
+    <p><input type="submit" value="Submit" /></p>
+    </div>
+</form>
+</div>
+</div>
+</div>
+
+
+</div>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+
+					<fieldset>
+    					<legend>Who are You?</legend>
+						
+						<div class="radiofields" id=id_usertype_1>
+								
+   					 <label><input name="usertype" type="radio" {{C}} value="C" onclick="Dajaxice.griev.rest_of_form(second_part_form)"/> Client</label>
+							</div>
+							
+						<div class="radiofields" id=id_usertype_2>
+								
+   					 <label><input name="usertype" type="radio" {{Off}} value="Off" onclick="Dajaxice.griev.rest_of_form(second_part_form,{'usertype':'Off'})"/> Officer</label>
+							</div>
+							<div class="radiofields" id=id_usertype_3>
+								
+   					 <label><input name="usertype" type="radio" {{Org}} value="Org" onclick="Dajaxice.griev.rest_of_form(second_part_form,{'usertype':'Org'})"/> Organistion</label>
+							</div>
+							
+							</fieldset>

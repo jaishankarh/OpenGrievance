@@ -1,0 +1,7 @@
+<div>
+    <ul class="button-group">
+      {% for key,value in links.iteritems %}
+      <li><a href="{{ key }}/" class="button [radius round]">{{ value }}</a></li>
+      {% endfor %}
+    </ul>
+</div>

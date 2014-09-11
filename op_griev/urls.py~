@@ -1,0 +1,31 @@
+from django.conf.urls import patterns, include, url
+from django.contrib import admin
+from griev import views
+from django.conf import settings
+from django.conf.urls.static import static
+from dajaxice.core import dajaxice_autodiscover, dajaxice_config
+
+
+# Uncomment the next two lines to enable the admin:
+# from django.contrib import admin
+admin.autodiscover()
+dajaxice_autodiscover()
+
+urlpatterns = patterns('',
+    # Examples:
+    # url(r'^$', 'op_griev.views.home', name='home'),
+    # url(r'^op_griev/', include('op_griev.foo.urls')),
+
+    # Uncomment the admin/doc line below to enable admin documentation:
+    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+		 url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
+    # Uncomment the next line to enable the admin:
+    url(r'^admin/$', include(admin.site.urls)),
+    url(r'^register/$', views.register),
+    url(r'^login/$', views.login),
+    url(r'^login_success/$', views.login_success),
+    url(r'^login_failure/$', views.login_failure),
+    url(r'^cal-try/$', views.cal),
+    url(r'post_grievance/', views.post_grievance),
+    url(r'my_grievances/', views.my_grievances),
+)+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

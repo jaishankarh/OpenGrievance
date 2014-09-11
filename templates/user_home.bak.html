@@ -1,0 +1,254 @@
+
+<!doctype html>
+{% load extras %}
+
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+{% load staticfiles %}
+<title>OpenG &mdash; Home</title>
+<meta name="Open Grievance" content="A grievance redresssal website">
+<link rel="stylesheet" type="text/css" href="{% static "css/home.css" %}">   
+
+
+
+<!--  *****************************************************************
+
+******************** -->
+<link href="{% static "css/openG.css" %}" rel="stylesheet">
+<link href="{% static "css/foundation/foundation.css" %}" rel="stylesheet">
+<link href="{% static "css/foundation/foundation.min.css" %}" rel="stylesheet">
+<!--  ************************************************************************************* -->
+
+<link href="{% static "css/font-awesome.min.css" %}" rel="stylesheet">
+<script type="text/javascript" src='{% static "js/jquery-1.9.1.js" %}'></script>
+</head>
+<body>
+
+<header>
+	<div class="row">
+			<div class="logo">
+				<a href="index.html"><img src="{% static "img/logo.png" alt="Open Grievance" %}" /></a>
+			</div>
+			
+		
+	</div>
+</header>
+
+<nav>
+	<div class="row">
+		<div class="small-12 medium-12 large-12 columns">			
+			<ul>
+				<li><a href="/home" class="current">Home</a></li>
+				<li><a href="about.html">About Us</a></li>
+				<li><a href="faqs.html">FAQ's</a></li>
+                                <li><a href="/logout">Logout</a></li>
+                                
+			</ul>
+		</div>
+	</div>
+</nav>
+
+
+<div class="section-headline section-bg-color1">
+	<div class="row">
+		<div class="small-12 medium-12 large-12 large-centered columns">
+			<h1>WE ARE DIFFERENT</h1>
+			<h5>Its Smart &amp; Easy to use </h5>
+		</div>
+	</div>
+</div>
+
+
+<div class="section-hero section-bg-color2">
+	<div class="row">
+		<div class="small-12 medium-6 large-6 columns">
+			<div class="download-box">
+				{%if content %}
+				{{ content }}
+				{% else %}
+				<h3>How it works</h3>
+				<p>(Short discription of how our application works)</p>
+				<p class="p-small">We are a grievance management website for the masses.
+				{% endif %}
+			</div>
+		</div>
+		<div class="small-12 medium-6 large-6 columns">
+			<div class="download-box">
+				<h3>{{title}}</h3> 
+				<!-- Begin MailChimp Signup Form -->
+				<div id="mc_embed_signup">
+								
+							
+							
+							{% if form %}
+								<div id="errorlist">
+								  {% if form.errors %}
+							        	<p style="color: red;">
+							         	   {{ form.errors }}
+							        	</p>
+								  {% endif %}
+							  </div>
+							  <div class="container" id="fields">
+							  {% if form.is_multipart %}
+							    <form enctype="multipart/form-data" method="post" action={{ action_url }}>
+								{% else %}
+							    <form method="post" action={{ action_url }}>
+								{% endif %}
+								{% csrf_token %}
+							    {% for field in form %}
+							    			
+							    			{% if field.field.widget|field_type == 'RadioSelect' %}
+							    				<div class="fieldWrapper" id={{ field.id_for_label|make_div_id }}>
+							    				{{ field.errors }}
+							    				<fieldset>
+							    					<legend>{{ field.name|capfirst }}</legend>
+													{% for radio in field %}
+													<div class="radiofields" id={{ field.id_for_label|make_radio_id:forloop.counter }}>
+															
+							   					 {{ radio }}
+														</div>
+														{% endfor %}
+														</fieldset>
+														</div>
+													{% else %}					
+							        <div class="fieldWrapper" id={{ field.id_for_label|make_div_id }}>
+							            {{ field.errors }}
+							            {{ field.label }}{{ field }}
+							        </div>
+							        {% endif %}
+							    {% endfor %}
+							    <div class="fieldWrapper" id="div_id_submit">
+							    {{ which_page|safe }}
+								<input type="submit" value="Register&nbsp&nbsp&nbsp&raquo;" name="subscribe" id="mc-embedded-subscribe" class="button round">
+							    </div>
+							</form>
+							</div>
+							{% else %}
+							<div>
+                                                            {{ menus|safe }}							
+                                                            {% endif %}
+                                                        </div>
+				
+				<!--End mc_embed_signup-->
+				<p class="p-smaller">
+					** This is the login block. Users can log in from here.
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="section-steps section-bg-color2">
+	<div class="row">
+		<div class="small-12 medium-12 large-12 columns">
+			<h3>This is all you have to do&hellip;</h3>
+		</div>
+	</div>
+	<div class="row">
+		<div class="small-12 medium-4 large-4 columns">
+			<div class="step-holder">
+				<div class="step"><div class="step-number">1</div></div>
+				<p>Step one login.</p>
+			</div>
+		</div>
+		<div class="small-12 medium-4 large-4 columns">
+			<div class="step-holder">
+				<div class="step"><div class="step-number">2</div></div>
+				<p>Step two type your grievance</p>
+			</div>
+		</div>
+		<div class="small-12 medium-4 large-4 columns">
+			<div class="step-holder">
+				<div class="step"><div class="step-number">3</div></div>
+				<p>Step three hit send</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+<div class="section-features section-bg-color1">
+	<div class="row">
+		<div class="small-12 medium-12 large-12 columns">
+			<h3>Features&hellip;</h3>
+		</div>
+	</div>
+	<div class="row">
+		<div class="small-12 medium-4 large-4 columns">
+			<div class="feature-box">
+				<h4>Feature One</h4>
+				<p></p>
+			</div>
+		</div>
+		<div class="small-12 medium-4 large-4 columns">
+			<div class="feature-box">
+				<h4>Feature Two</h4>
+				<p></p>
+			</div>
+		</div>
+		<div class="small-12 medium-4 large-4 columns">
+			<div class="feature-box">
+				<h4> Feature Three</h4>
+				<p></p>
+			</div>
+		</div>	
+	</div>
+	</div>
+
+
+
+
+
+<footer class="section-bg-color2">
+	<div class="row">
+		<div class="small-12 medium-12 large-12 columns">
+			<h1>Leave a comment</h1>
+			<h2>Share whats on your mind&hellip;</h2> 
+			
+			<div class="social-icons">
+				<a href="http://www.twitter.com/openG" target="_blank"><i class="fa fa-twitter-square fa-2x">
+				</i></a>
+				<a href="http://www.facebook.com/openG" target="_blank"><i class="fa fa-facebook-square fa-2x"></i></a>
+			</div>
+			
+			<div class="section-btn"><a href="about.html" class="button round">Learn More About Us &nbsp;&raquo;</a></div>
+		<ul>
+				<li>&copy; 2014 Open Grievance. All rights reserved.</li>
+				
+				
+				<!-- *****************************************************************************************
+				The "Powered by Type & Grids" link in the footer is required in the Free version
+				typeandgrids.com/pirates -->
+			<!--	<li>Powered by <a href="http://www.typeandgrids.com" target="_blank">Type &amp; Grids</a></li>
+				<!--  ************************************************************************************ -->
+			
+			</ul>			
+				
+		
+		</div>
+	</div>
+</footer>
+
+<script>
+    
+//    $(document).ready(function() {
+//    
+//    $('#id_sector').on('change',function(event){
+//
+//        event.preventDefault();
+//        var requestData = {sector: $(this).val()}
+//        $.get('/provide_keywords', requestData, function(data) {
+//            
+//            $('#id_keywords').html(data);
+//        });
+//    });
+//    });
+</script>
+{{ form.media }}
+</body>
+</html>

@@ -1,0 +1,87 @@
+.fieldWrapper{
+	margin-left: 25%;
+	display: list-item;
+	list-style-type: none;
+	display: inline-block; 
+	width: 70%; 
+	text-align: left;
+	//border: 1px solid black;
+	font-size:medium;
+	color: beige;
+}
+.radiofields{
+	color: white;
+	display: inline;
+	}
+	
+
+legend {
+	color:blue;
+	background-color: rgba(54, 25, 25, .5);
+	
+	}
+fieldset{
+	color: blue;
+	}
+#main{
+			position: absolute;
+			left:12.5%;
+			width:75%;
+			height:150%;
+}
+
+
+#id_address{
+	font-size:18px;
+	color:gray;
+	width:100%;
+	height:150px;
+}
+input,select{
+	
+	font-size:18px;
+	//color:gray;
+	height:40px;
+	width:100%;
+	
+}
+#title{
+	
+	width:100%;
+	text-align: center;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	color: #1345ab;
+	font-size: 30px;
+}
+/*#div_id_gender_0{
+	
+	margin-top: 2%;
+}
+#id_gender_1{
+	
+	float:left;
+}
+#id_gender_2{
+	
+	float:left:
+}
+#div_id_usertype_0{
+	margin-top: 2%;
+}
+#id_usertype_1{
+	float: right;
+	
+}
+#id_usertype_2{
+	float: right;
+	
+}
+#id_usertype_3{
+	float: right;
+	
+}
+#id_usertype_4{
+	float: right;
+	
+}
+*/

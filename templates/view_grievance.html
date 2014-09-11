@@ -1,0 +1,14 @@
+{% load extras %}
+{% load staticfiles %}
+
+<div class="row" >
+    {% for i, v in fields.iteritems %}
+    <div class="row">
+        <div class="large-6 medium-6 columns" style="padding:10px;">
+            <label for="id_{{ i }}" style="font-size:1.4em;color: coral">{{ i|capfirst }}:</label>
+        </div>
+        <div id="id_{{ i }}}" class="large-6 medium-6 columns" style="padding:10px;font-size:1.4em;color: beige">{{ v }}</div>
+   
+    </div>
+     {% endfor %}
+</div>
